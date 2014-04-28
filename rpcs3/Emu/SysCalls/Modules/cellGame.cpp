@@ -3,6 +3,7 @@
 #include "Emu/SysCalls/SC_FUNC.h"
 
 #include "Loader/PSF.h"
+#include <wx/msgdlg.h>
 
 void cellGame_init();
 Module cellGame(0x003e, cellGame_init);

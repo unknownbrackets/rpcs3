@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "MemoryViewer.h"
+#include <wx/button.h>
+#include <wx/stattext.h>
 
 MemoryViewerPanel::MemoryViewerPanel(wxWindow* parent) 
 	: wxFrame(parent, wxID_ANY, "Memory Viewer", wxDefaultPosition, wxSize(700, 450))

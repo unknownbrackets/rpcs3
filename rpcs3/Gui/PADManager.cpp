@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "PADManager.h"
+#include <wx/button.h>
+#include <wx/dialog.h>
 
 PADManager::PADManager(wxWindow* parent)
 	: wxDialog(parent, wxID_ANY, "PAD Settings")

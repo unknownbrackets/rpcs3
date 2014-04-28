@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "CompilerELF.h"
 #include "Emu/Cell/PPUProgramCompiler.h"
+#include <wx/menu.h>
+#include <wx/filedlg.h>
+
 using namespace PPU_opcodes;
 
 enum CompilerIDs

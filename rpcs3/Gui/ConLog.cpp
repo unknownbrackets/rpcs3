@@ -2,6 +2,7 @@
 
 #include "Gui/ConLog.h"
 #include <wx/listctrl.h>
+#include <wx/msgdlg.h>
 #include "Ini.h"
 #include <fstream>
 #include <vector>

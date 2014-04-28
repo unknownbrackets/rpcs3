@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TextInputDialog.h"
+#include <wx/button.h>
 
 TextInputDialog::TextInputDialog(wxWindow* parent, const std::string& defvalue, const std::string& label)
 	: wxDialog(parent, wxID_ANY, label)

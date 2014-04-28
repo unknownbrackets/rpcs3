@@ -1,5 +1,7 @@
 #pragma once
 
+#include <wx/dialog.h>
+
 class TextInputDialog : public wxDialog
 {
 	wxTextCtrl* m_tctrl_text;

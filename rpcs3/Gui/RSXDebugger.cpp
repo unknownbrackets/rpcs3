@@ -4,6 +4,9 @@
 #include "Emu/GS/GCM.h"
 
 #include "MemoryViewer.h"
+#include <wx/button.h>
+#include <wx/msgdlg.h>
+#include <wx/dialog.h>
 
 // TODO: Clear the object when restarting the emulator
 std::vector<RSXDebuggerProgram> m_debug_programs;

@@ -2,6 +2,7 @@
 #include "Emu/CPU/CPUThread.h"
 #include "Emu/CPU/CPUDecoder.h"
 #include "Emu/CPU/CPUDisAsm.h"
+#include <wx/choice.h>
 
 class InterpreterDisAsmFrame : public wxPanel
 {

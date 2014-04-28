@@ -8,6 +8,10 @@
 #include "Emu/Cell/PPUDisAsm.h"
 #include "Emu/Cell/SPUDecoder.h"
 #include "Emu/Cell/SPUDisAsm.h"
+#include <wx/filedlg.h>
+#include <wx/button.h>
+#include <wx/dialog.h>
+#include <wx/msgdlg.h>
 
 DisAsmFrame::DisAsmFrame(PPCThread& cpu)
 	: wxFrame(nullptr, wxID_ANY, "DisAsm")

@@ -3,6 +3,7 @@
 #include "TextInputDialog.h"
 #include "../Crypto/aes.h"
 #include "../Crypto/sha1.h"
+#include <wx/dialog.h>
 
 class FnIdGenerator : public wxDialog
 {

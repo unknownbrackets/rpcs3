@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "FnIdGenerator.h"
+#include <wx/button.h>
+#include <wx/dialog.h>
 
 FnIdGenerator::FnIdGenerator(wxWindow* parent)
 	: wxDialog(parent, wxID_ANY, "FunctionID Generator")

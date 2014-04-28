@@ -13,6 +13,12 @@
 #include "Gui/VFSManager.h"
 #include "Gui/AboutDialog.h"
 #include <wx/dynlib.h>
+#include <wx/combobox.h>
+#include <wx/checkbox.h>
+#include <wx/menu.h>
+#include <wx/dirdlg.h>
+#include <wx/filedlg.h>
+#include <wx/dialog.h>
 
 #include "Loader/PKG.h"
 

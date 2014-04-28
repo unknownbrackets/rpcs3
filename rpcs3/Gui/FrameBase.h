@@ -1,4 +1,5 @@
 #pragma once
+#include "wx/frame.h"
 
 class FrameBase : public wxFrame
 {

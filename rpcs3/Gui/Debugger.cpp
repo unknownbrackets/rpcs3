@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <wx/statline.h>
+#include <wx/button.h>
 
 #include "Debugger.h"
 #include "Emu/Memory/Memory.h"

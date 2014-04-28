@@ -1,5 +1,11 @@
 #include "stdafx.h"
 #include "VFSManager.h"
+#include <wx/dirdlg.h>
+#include <wx/filedlg.h>
+#include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/menu.h>
+#include <wx/dialog.h>
 
 VFSEntrySettingsDialog::VFSEntrySettingsDialog(wxWindow* parent, VFSManagerEntry& entry)
 	: wxDialog(parent, wxID_ANY, "Mount configuration")

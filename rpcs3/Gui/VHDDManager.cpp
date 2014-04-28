@@ -2,6 +2,10 @@
 #include "VHDDManager.h"
 #include "TextInputDialog.h"
 #include <wx/busyinfo.h>
+#include <wx/spinctrl.h>
+#include <wx/dirdlg.h>
+#include <wx/filedlg.h>
+#include <wx/button.h>
 
 VHDDListDropTarget::VHDDListDropTarget(wxListView* parent) : m_parent(parent)
 {

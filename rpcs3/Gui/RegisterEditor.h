@@ -1,3 +1,10 @@
+#pragma once
+
+#include <wx/combobox.h>
+#include <wx/button.h>
+#include <wx/stattext.h>
+#include <wx/dialog.h>
+
 class RegisterEditorDialog : public wxDialog
 {
 	u64 pc;

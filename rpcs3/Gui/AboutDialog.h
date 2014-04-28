@@ -1,3 +1,6 @@
+#include <wx/stattext.h>
+#include <wx/button.h>
+
 class AboutDialog
 	: public wxDialog
 {

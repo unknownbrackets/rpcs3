@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include "Gui/MemoryViewer.h"
 #include "Emu/CPU/CPUThreadManager.h"
 #include "Emu/Io/Pad.h"
 #include "Emu/Io/Keyboard.h"
@@ -13,6 +12,7 @@
 #include "Loader/Loader.h"
 #include "SysCalls/Callback.h"
 
+class MemoryViewerPanel;
 class EventManager;
 extern void UnloadModules();
 

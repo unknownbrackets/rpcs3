@@ -9,6 +9,8 @@
 
 #include "InstructionEditor.h"
 #include "RegisterEditor.h"
+#include <wx/button.h>
+#include <wx/dialog.h>
 
 //static const int show_lines = 30;
 

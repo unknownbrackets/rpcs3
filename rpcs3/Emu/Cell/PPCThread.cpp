@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "PPCThread.h"
-#include "Gui/InterpreterDisAsm.h"
 
 PPCThread* GetCurrentPPCThread()
 {

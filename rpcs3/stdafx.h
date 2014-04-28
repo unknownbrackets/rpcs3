@@ -22,19 +22,6 @@
 
 #include <wx/wfstream.h>
 #include <wx/dir.h>
-#include <wx/spinctrl.h>
-#include <wx/datetime.h>
-#include <wx/filepicker.h>
-#include <wx/menu.h>
-#include <wx/menuitem.h>
-#include <wx/stattext.h>
-#include <wx/msgdlg.h>
-#include "wx/gauge.h"
-#include <wx/stattext.h>
-#include "wx/scrolbar.h"
-#include "wx/frame.h"
-#include <wx/combobox.h>
-#include <wx/checkbox.h>
 #include "wx/app.h"
 
 #include <wx/wxprec.h>

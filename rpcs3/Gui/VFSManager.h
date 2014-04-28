@@ -1,5 +1,8 @@
 #pragma once
 
+#include <wx/choice.h>
+#include <wx/dialog.h>
+
 class VFSEntrySettingsDialog : public wxDialog
 {
 	wxTextCtrl* m_tctrl_dev_path;

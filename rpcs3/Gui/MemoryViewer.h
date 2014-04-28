@@ -1,6 +1,8 @@
 #pragma once
 
 #include <wx/listctrl.h>
+#include <wx/spinctrl.h>
+#include <wx/combobox.h>
 
 class MemoryViewerPanel : public wxFrame
 {

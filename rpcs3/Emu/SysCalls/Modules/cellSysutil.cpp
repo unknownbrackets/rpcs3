@@ -7,6 +7,7 @@
 #include "cellSysutil_SaveData.h"
 
 #include "Loader/PSF.h"
+#include <wx/msgdlg.h>
 
 typedef void (*CellMsgDialogCallback)(int buttonType, mem_ptr_t<void> userData);
 typedef void (*CellHddGameStatCallback)(mem_ptr_t<CellHddGameCBResult> cbResult, mem_ptr_t<CellHddGameStatGet> get, mem_ptr_t<CellHddGameStatSet> set);

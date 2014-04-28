@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <wx/dnd.h>
+#include <wx/choice.h>
+#include <wx/dialog.h>
 #include "Emu/HDD/HDD.h"
 
 class VHDDListDropTarget : public wxDropTarget

@@ -1,5 +1,9 @@
 #pragma once
 
+#include "wx/gauge.h"
+#include <wx/stattext.h>
+#include <wx/dialog.h>
+
 class MTProgressDialog : public wxDialog
 {
 	wxGauge** m_gauge;
