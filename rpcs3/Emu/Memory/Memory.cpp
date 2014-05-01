@@ -406,30 +406,115 @@ bool NullMemoryBlock::Write128(const u64 addr, const u128 value)
 	return false;
 }
 
+static HANDLE hMemoryMapping;
+
 //MemoryBase
+void MemoryBase::Init(MemoryType type)
+{
+	if(m_inited) return;
+	m_inited = true;
+
+	ConLog.Write("Initing memory...");
+
+	base = (u8 *)VirtualAlloc(0, 0x100000000ULL, MEM_RESERVE, PAGE_READWRITE);
+	VirtualFree(base, 0, MEM_RELEASE);
+
+	u64 size = 16ULL * 256ULL * 1024ULL * 1024ULL;//512 * 1024 * 1024;
+	hMemoryMapping = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, (DWORD)(size >> 32), (DWORD)(size), NULL);
+
+	switch(type)
+	{
+	case Memory_PS3:
+		// TODO: Correctly mirror memory in these segments.
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x00000000), 0x10000000, base + 0x00000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x10000000), 0x10000000, base + 0x10000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x20000000), 0x10000000, base + 0x20000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x30000000), 0x10000000, base + 0x30000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x40000000), 0x10000000, base + 0x40000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x60000000), 0x10000000, base + 0x60000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x70000000), 0x10000000, base + 0x70000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x80000000), 0x10000000, base + 0x80000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x90000000), 0x10000000, base + 0x90000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0xA0000000), 0x10000000, base + 0xA0000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0xB0000000), 0x10000000, base + 0xB0000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0xC0000000), 0x10000000, base + 0xC0000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0xD0000000), 0x10000000, base + 0xD0000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0xE0000000), 0x10000000, base + 0xE0000000);
+
+		MemoryBlocks.push_back(MainMem.SetRange(0x00010000, 0x2FFF0000));
+		MemoryBlocks.push_back(UserMemory = PRXMem.SetRange(0x30000000, 0x10000000));
+		MemoryBlocks.push_back(RSXCMDMem.SetRange(0x40000000, 0x10000000));
+		MemoryBlocks.push_back(MmaperMem.SetRange(0xB0000000, 0x10000000));
+		MemoryBlocks.push_back(RSXFBMem.SetRange(0xC0000000, 0x10000000));
+		MemoryBlocks.push_back(StackMem.SetRange(0xD0000000, 0x10000000));
+		//MemoryBlocks.push_back(SpuRawMem.SetRange(0xE0000000, 0x10000000));
+		//MemoryBlocks.push_back(SpuThrMem.SetRange(0xF0000000, 0x10000000));
+	break;
+
+	// TODO: Just use LE/BE read/write instead of subclasses.
+
+	case Memory_PSV:
+		// TODO: Correctly mirror memory in these segments, if applicable.
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x81000000), 0x10000000, base + 0x81000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x91000000), 0x10000000, base + 0x91000000);
+
+		MemoryBlocks.push_back(PSVMemory.RAM.SetRange(0x81000000, 0x10000000));
+		MemoryBlocks.push_back(UserMemory = PSVMemory.Userspace.SetRange(0x91000000, 0x10000000));
+	break;
+
+	case Memory_PSP:
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x00010000), 0x00004000, base + 0x00010000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x00010000), 0x00004000, base + 0x40010000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x00010000), 0x00004000, base + 0x80010000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x00010000), 0x00004000, base + 0xC0010000);
+
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x04000000), 0x00200000, base + 0x04000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x04000000), 0x00200000, base + 0x44000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x04000000), 0x00200000, base + 0x84000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x04000000), 0x00200000, base + 0xC4000000);
+
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x08800000), 0x01800000, base + 0x08800000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x08800000), 0x01800000, base + 0x48800000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x08000000), 0x02000000, base + 0x88000000);
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)0x08000000), 0x02000000, base + 0xC8000000);
+
+		MemoryBlocks.push_back(PSPMemory.Scratchpad.SetRange(0x00010000, 0x00004000));
+		MemoryBlocks.push_back(PSPMemory.VRAM.SetRange(0x04000000, 0x00200000));
+		MemoryBlocks.push_back(PSPMemory.RAM.SetRange(0x08000000, 0x02000000));
+		MemoryBlocks.push_back(PSPMemory.Kernel.SetRange(0x88000000, 0x00800000));
+		MemoryBlocks.push_back(UserMemory = PSPMemory.Userspace.SetRange(0x08800000, 0x01800000));
+	break;
+	}
+
+	ConLog.Write("Memory initialized.");
+}
+
 void MemoryBase::Write8(u64 addr, const u8 data)
 {
-	GetMemByAddr(addr).Write8(addr, data);
+	*(base + addr) = re(data);
 }
 
 void MemoryBase::Write16(u64 addr, const u16 data)
 {
-	GetMemByAddr(addr).Write16(addr, data);
+	*(u16 *)(base + addr) = re(data);
 }
 
 void MemoryBase::Write32(u64 addr, const u32 data)
 {
-	GetMemByAddr(addr).Write32(addr, data);
+	*(u32 *)(base + addr) = re(data);
 }
 
 void MemoryBase::Write64(u64 addr, const u64 data)
 {
-	GetMemByAddr(addr).Write64(addr, data);
+	*(u64 *)(base + addr) = re(data);
 }
 
 void MemoryBase::Write128(u64 addr, const u128 data)
 {
-	GetMemByAddr(addr).Write128(addr, data);
+	u128 res;
+	res.lo = re(data.hi);
+	res.hi = re(data.lo);
+	*(u128 *)(base + addr) = res;
 }
 
 bool MemoryBase::Write8NN(u64 addr, const u8 data)
@@ -469,36 +554,30 @@ bool MemoryBase::Write128NN(u64 addr, const u128 data)
 
 u8 MemoryBase::Read8(u64 addr)
 {
-	u8 res;
-	Read8ByAddr(addr, &res);
-	return res;
+	return re(*(base + addr));
 }
 
 u16 MemoryBase::Read16(u64 addr)
 {
-	u16 res;
-	Read16ByAddr(addr, &res);
-	return res;
+	return re(*(u16 *)(base + addr));
 }
 
 u32 MemoryBase::Read32(u64 addr)
 {
-	u32 res;
-	Read32ByAddr(addr, &res);
-	return res;
+	return re(*(u32 *)(base + addr));
 }
 
 u64 MemoryBase::Read64(u64 addr)
 {
-	u64 res;
-	Read64ByAddr(addr, &res);
-	return res;
+	return re(*(u64 *)(base + addr));
 }
 
 u128 MemoryBase::Read128(u64 addr)
 {
+	u128 data = *(u128 *)(base + addr);
 	u128 res;
-	Read128ByAddr(addr, &res);
+	res.lo = re(data.hi);
+	res.hi = re(data.lo);
 	return res;
 }
 
@@ -549,6 +628,7 @@ u64 VirtualMemoryBlock::Map(u64 realaddr, u32 size, u64 addr)
 		if(!IsInMyRange(addr, size) && (IsMyAddress(addr) || IsMyAddress(addr + size - 1)))
 			return 0;
 
+		MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)realaddr), size, Memory.base + addr);
 		m_mapped_memory.emplace_back(addr, realaddr, size);
 		return addr;
 	}
@@ -572,6 +652,7 @@ u64 VirtualMemoryBlock::Map(u64 realaddr, u32 size, u64 addr)
 
 			if(!is_good_addr) continue;
 
+			MapViewOfFileEx(hMemoryMapping, FILE_MAP_ALL_ACCESS, 0, (DWORD)((u64)realaddr), size, Memory.base + addr);
 			m_mapped_memory.emplace_back(addr, realaddr, size);
 
 			return addr;
@@ -588,6 +669,7 @@ u32 VirtualMemoryBlock::UnmapRealAddress(u64 realaddr)
 		if(m_mapped_memory[i].realAddress == realaddr && IsInMyRange(m_mapped_memory[i].addr, m_mapped_memory[i].size))
 		{
 			u32 size = m_mapped_memory[i].size;
+			UnmapViewOfFile(Memory.base + m_mapped_memory[i].addr);
 			m_mapped_memory.erase(m_mapped_memory.begin() + i);
 			return size;
 		}
@@ -603,6 +685,7 @@ u32 VirtualMemoryBlock::UnmapAddress(u64 addr)
 		if(m_mapped_memory[i].addr == addr && IsInMyRange(m_mapped_memory[i].addr, m_mapped_memory[i].size))
 		{
 			u32 size = m_mapped_memory[i].size;
+			UnmapViewOfFile(Memory.base + m_mapped_memory[i].addr);
 			m_mapped_memory.erase(m_mapped_memory.begin() + i);
 			return size;
 		}

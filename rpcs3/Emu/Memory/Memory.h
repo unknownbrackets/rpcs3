@@ -16,6 +16,7 @@ class MemoryBase
 	NullMemoryBlock NullMem;
 
 public:
+	u8 *base;
 	std::vector<MemoryBlock*> MemoryBlocks;
 	MemoryBlock* UserMemory;
 
@@ -169,9 +170,14 @@ public:
 		return NullMem.Read128(addr, value);
 	}
 
-	u8* GetMemFromAddr(const u64 addr)
+	u8* GetMemFromAddrOld(const u64 addr)
 	{
 		return GetMemByAddr(addr).GetMemFromAddr(addr);
+	}
+
+	u8* GetMemFromAddr(const u64 addr)
+	{
+		return base + addr;
 	}
 
 	void* VirtualToRealAddr(const u64 vaddr)
@@ -205,42 +211,7 @@ public:
 		return true;
 	}
 
-	void Init(MemoryType type)
-	{
-		if(m_inited) return;
-		m_inited = true;
-
-		ConLog.Write("Initing memory...");
-
-		switch(type)
-		{
-		case Memory_PS3:
-			MemoryBlocks.push_back(MainMem.SetRange(0x00010000, 0x2FFF0000));
-			MemoryBlocks.push_back(UserMemory = PRXMem.SetRange(0x30000000, 0x10000000));
-			MemoryBlocks.push_back(RSXCMDMem.SetRange(0x40000000, 0x10000000));
-			MemoryBlocks.push_back(MmaperMem.SetRange(0xB0000000, 0x10000000));
-			MemoryBlocks.push_back(RSXFBMem.SetRange(0xC0000000, 0x10000000));
-			MemoryBlocks.push_back(StackMem.SetRange(0xD0000000, 0x10000000));
-			//MemoryBlocks.push_back(SpuRawMem.SetRange(0xE0000000, 0x10000000));
-			//MemoryBlocks.push_back(SpuThrMem.SetRange(0xF0000000, 0x10000000));
-		break;
-
-		case Memory_PSV:
-			MemoryBlocks.push_back(PSVMemory.RAM.SetRange(0x81000000, 0x10000000));
-			MemoryBlocks.push_back(UserMemory = PSVMemory.Userspace.SetRange(0x91000000, 0x10000000));
-		break;
-
-		case Memory_PSP:
-			MemoryBlocks.push_back(PSPMemory.Scratchpad.SetRange(0x00010000, 0x00004000));
-			MemoryBlocks.push_back(PSPMemory.VRAM.SetRange(0x04000000, 0x00200000));
-			MemoryBlocks.push_back(PSPMemory.RAM.SetRange(0x08000000, 0x02000000));
-			MemoryBlocks.push_back(PSPMemory.Kernel.SetRange(0x88000000, 0x00800000));
-			MemoryBlocks.push_back(UserMemory = PSPMemory.Userspace.SetRange(0x08800000, 0x01800000));
-		break;
-		}
-
-		ConLog.Write("Memory initialized.");
-	}
+	void Init(MemoryType type);
 
 	bool IsGoodAddr(const u64 addr)
 	{
