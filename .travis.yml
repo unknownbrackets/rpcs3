@@ -4,10 +4,6 @@ compiler:
  - clang
  - gcc
 
-branches:
-  only:
-    - master
-
 before_install:
   - echo "yes" | sudo apt-key adv --fetch-keys http://repos.codelite.org/CodeLite.asc
   - echo "yes" | sudo apt-add-repository 'deb http://repos.codelite.org/wx3.0/ubuntu/ precise universe'
